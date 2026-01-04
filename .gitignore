@@ -1,0 +1,25 @@
+# Private keys and sensitive data
+polygon_private_key.txt
+.env
+*.env
+.env.local
+
+# Deployment info (may contain sensitive data)
+deployment.json
+
+# Dependencies
+node_modules/
+
+# Hardhat files
+cache/
+artifacts/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+*.txt
