@@ -3,7 +3,7 @@ services:
     name: blockchain-nft-api
     env: node
     plan: free
-    buildCommand: npm install --legacy-peer-deps
+    buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: PORT
