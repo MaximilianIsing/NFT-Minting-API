@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import mint from './mint.js';
 import retrieve from './retrieve.js';
+import { logMint, logRetrieve } from './logger.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -147,13 +148,49 @@ app.post('/api/mint', authenticate, upload.single('image'), async (req, res) => 
 
     console.log(`[MINT] Request for ${destinationAddress}`);
 
-    // Call mint function
-    const result = await mint(destinationAddress, finalImageUrl, traitsObj, configObj || {});
+    // Get wallet address from config or use a placeholder
+    let walletAddress = 'unknown';
+    try {
+      const deploymentInfo = JSON.parse(fs.readFileSync('deployment.json', 'utf8'));
+      walletAddress = deploymentInfo.ownerAddress || 'unknown';
+    } catch (e) {
+      // Ignore
+    }
 
-    res.json({
-      success: true,
-      data: result
-    });
+    try {
+      // Call mint function
+      const result = await mint(destinationAddress, finalImageUrl, traitsObj, configObj || {});
+
+      // Log successful mint
+      logMint(
+        walletAddress,
+        destinationAddress,
+        finalImageUrl,
+        result.tokenId,
+        result.transactionHash,
+        result.blockNumber,
+        true,
+        ''
+      );
+
+      res.json({
+        success: true,
+        data: result
+      });
+    } catch (mintError) {
+      // Log failed mint
+      logMint(
+        walletAddress,
+        destinationAddress,
+        finalImageUrl,
+        null,
+        null,
+        null,
+        false,
+        mintError.message
+      );
+      throw mintError;
+    }
 
   } catch (error) {
     console.error('[MINT] Error:', error.message);
@@ -186,14 +223,23 @@ app.get('/api/retrieve/:walletAddress', authenticate, async (req, res) => {
 
     console.log(`[RETRIEVE] Request for ${walletAddress}`);
 
-    // Call retrieve function
-    const items = await retrieve(walletAddress, config);
+    try {
+      // Call retrieve function
+      const items = await retrieve(walletAddress, config);
 
-    res.json({
-      success: true,
-      count: items.length,
-      data: items
-    });
+      // Log successful retrieve
+      logRetrieve(walletAddress, items.length, true, '');
+
+      res.json({
+        success: true,
+        count: items.length,
+        data: items
+      });
+    } catch (retrieveError) {
+      // Log failed retrieve
+      logRetrieve(walletAddress, 0, false, retrieveError.message);
+      throw retrieveError;
+    }
 
   } catch (error) {
     console.error('[RETRIEVE] Error:', error.message);
