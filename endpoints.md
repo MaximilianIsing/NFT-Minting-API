@@ -482,15 +482,6 @@ All endpoints operate on the **Polygon Mainnet**.
 
 ---
 
-## Rate Limiting
-
-Render's free tier may have rate limits. For production use, consider:
-- Upgrading to a paid Render plan
-- Implementing additional rate limiting
-- Using a CDN or load balancer
-
----
-
 ## Local Development
 
 To test locally:
@@ -505,6 +496,103 @@ The server will run on `http://localhost:3000`
 Test with:
 ```bash
 curl http://localhost:3000/health
+```
+
+---
+
+### 5. Get Item by Token ID
+
+Gets a specific NFT game item by its token ID.
+
+**Endpoint:** `GET /api/item/:tokenId`
+
+**Authentication:** Required
+
+**Path Parameters:**
+- `tokenId` (number/string, required): The token ID to look up
+
+**Query Parameters:**
+- `contractAddress` (string, optional): Override contract address
+- `rpcUrl` (string, optional): Override RPC URL
+- `apiKey` (string, optional): Alternative way to pass API key
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "tokenId": "1",
+    "owner": "0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813",
+    "metadata": {
+      "name": "Legendary Fire Sword",
+      "description": "A powerful sword",
+      "image": "https://...",
+      "traits": {
+        "attack": 150,
+        "defense": 75,
+        "rarity": "legendary"
+      }
+    },
+    "traits": {
+      "attack": 150,
+      "defense": 75,
+      "rarity": "legendary"
+    },
+    "name": "Legendary Fire Sword",
+    "description": "A powerful sword",
+    "image": "https://...",
+    "contractAddress": "0x2aAA17DEd5265bF32a7612a76790Cae51D61862B"
+  }
+}
+```
+
+**Error Response (500):**
+```json
+{
+  "error": "Internal Server Error",
+  "message": "Token ID 999 does not exist or has been burned"
+}
+```
+
+**cURL Example:**
+```bash
+curl https://your-service-name.onrender.com/api/item/1 \
+  -H "X-API-Key: your-endpoint-key-here"
+```
+
+**JavaScript Example:**
+```javascript
+const tokenId = 1;
+const response = await fetch(
+  `https://your-service-name.onrender.com/api/item/${tokenId}`,
+  {
+    headers: {
+      'X-API-Key': 'your-endpoint-key-here'
+    }
+  }
+);
+
+const result = await response.json();
+if (result.success) {
+  console.log(`Item: ${result.data.name}`);
+  console.log(`Owner: ${result.data.owner}`);
+  console.log(`Traits:`, result.data.traits);
+}
+```
+
+**Alternative POST Method:**
+
+**Endpoint:** `POST /api/item`
+
+**Request Body:**
+```json
+{
+  "tokenId": 1,
+  "config": {
+    "contractAddress": "0x...",  // Optional
+    "rpcUrl": "https://..."       // Optional
+  }
+}
 ```
 
 ---
@@ -529,6 +617,19 @@ Headers: X-API-Key: your-key
 POST /api/retrieve
 Headers: X-API-Key: your-key
 Body: { walletAddress, config? }
+```
+
+### Get Item by Token ID
+```bash
+GET /api/item/:tokenId
+Headers: X-API-Key: your-key
+```
+
+Or POST method:
+```bash
+POST /api/item
+Headers: X-API-Key: your-key
+Body: { tokenId, config? }
 ```
 
 ### Health Check

@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import mint from './mint.js';
 import retrieve from './retrieve.js';
+import getItem from './get-item.js';
 import { logMint, logRetrieve } from './logger.js';
 import fs from 'fs';
 import path from 'path';
@@ -282,6 +283,67 @@ app.post('/api/retrieve', authenticate, async (req, res) => {
   }
 });
 
+// Get item by token ID endpoint
+app.get('/api/item/:tokenId', authenticate, async (req, res) => {
+  try {
+    const { tokenId } = req.params;
+    const { contractAddress, rpcUrl } = req.query;
+
+    // Build config from query params
+    const config = {};
+    if (contractAddress) config.contractAddress = contractAddress;
+    if (rpcUrl) config.rpcUrl = rpcUrl;
+
+    console.log(`[GET_ITEM] Request for token ID: ${tokenId}`);
+
+    // Call getItem function
+    const item = await getItem(tokenId, config);
+
+    res.json({
+      success: true,
+      data: item
+    });
+
+  } catch (error) {
+    console.error('[GET_ITEM] Error:', error.message);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+// Alternative POST method for get item (if needed)
+app.post('/api/item', authenticate, async (req, res) => {
+  try {
+    const { tokenId, config } = req.body;
+
+    if (!tokenId) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'tokenId is required'
+      });
+    }
+
+    console.log(`[GET_ITEM] Request for token ID: ${tokenId}`);
+
+    // Call getItem function
+    const item = await getItem(tokenId, config || {});
+
+    res.json({
+      success: true,
+      data: item
+    });
+
+  } catch (error) {
+    console.error('[GET_ITEM] Error:', error.message);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
@@ -289,6 +351,8 @@ app.listen(PORT, () => {
   console.log(`   POST /api/mint`);
   console.log(`   GET  /api/retrieve/:walletAddress`);
   console.log(`   POST /api/retrieve`);
+  console.log(`   GET  /api/item/:tokenId`);
+  console.log(`   POST /api/item`);
   console.log(`   GET  /health`);
 });
 
