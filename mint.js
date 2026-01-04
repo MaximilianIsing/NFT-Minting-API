@@ -5,7 +5,7 @@ import fs from 'fs';
  * Mints an NFT item with image and traits to a destination address
  * 
  * @param {string} destinationAddress - The address to mint the NFT to
- * @param {string} imageUrl - URL to the image (must be 256x256 pixels)
+ * @param {string} imageUrl - URL to the image (must be 512x512 pixels)
  * @param {Object} traits - JSON object containing the item's traits/metadata
  * @param {Object} config - Optional configuration:
  *   @param {string} contractAddress - Contract address (defaults to deployment.json)
@@ -47,14 +47,14 @@ async function mint(destinationAddress, imageUrl, traits, config = {}) {
           throw new Error('URL does not point to an image');
         }
       }
-      console.log('⚠️  Note: Ensure your image is exactly 256x256 pixels');
+          console.log('⚠️  Note: Ensure your image is exactly 512x512 pixels');
     } catch (error) {
       if (error.message.includes('fetch') || error.message.includes('undefined')) {
         // fetch not available (Node.js < 18) - just validate URL format
         if (!imageUrl.match(/\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i) && !imageUrl.startsWith('data:image/')) {
           console.log('⚠️  Warning: Image URL does not appear to be an image file');
         }
-        console.log('⚠️  Note: Ensure your image is exactly 256x256 pixels');
+        console.log('⚠️  Note: Ensure your image is exactly 512x512 pixels');
       } else {
         throw error;
       }
