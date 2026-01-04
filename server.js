@@ -3,6 +3,7 @@ import multer from 'multer';
 import mint from './mint.js';
 import retrieve from './retrieve.js';
 import getItem from './get-item.js';
+import verifyOwner from './verify-owner.js';
 import { logMint, logRetrieve } from './logger.js';
 import fs from 'fs';
 import path from 'path';
@@ -344,6 +345,67 @@ app.post('/api/item', authenticate, async (req, res) => {
   }
 });
 
+// Verify owner endpoint
+app.get('/api/verify-owner/:walletAddress/:tokenId', authenticate, async (req, res) => {
+  try {
+    const { walletAddress, tokenId } = req.params;
+    const { contractAddress, rpcUrl } = req.query;
+
+    // Build config from query params
+    const config = {};
+    if (contractAddress) config.contractAddress = contractAddress;
+    if (rpcUrl) config.rpcUrl = rpcUrl;
+
+    console.log(`[VERIFY_OWNER] Request: wallet ${walletAddress}, token ${tokenId}`);
+
+    // Call verifyOwner function
+    const result = await verifyOwner(walletAddress, tokenId, config);
+
+    res.json({
+      success: true,
+      data: result
+    });
+
+  } catch (error) {
+    console.error('[VERIFY_OWNER] Error:', error.message);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+// Alternative POST method for verify owner
+app.post('/api/verify-owner', authenticate, async (req, res) => {
+  try {
+    const { walletAddress, tokenId, config } = req.body;
+
+    if (!walletAddress || !tokenId) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'walletAddress and tokenId are required'
+      });
+    }
+
+    console.log(`[VERIFY_OWNER] Request: wallet ${walletAddress}, token ${tokenId}`);
+
+    // Call verifyOwner function
+    const result = await verifyOwner(walletAddress, tokenId, config || {});
+
+    res.json({
+      success: true,
+      data: result
+    });
+
+  } catch (error) {
+    console.error('[VERIFY_OWNER] Error:', error.message);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
@@ -353,6 +415,8 @@ app.listen(PORT, () => {
   console.log(`   POST /api/retrieve`);
   console.log(`   GET  /api/item/:tokenId`);
   console.log(`   POST /api/item`);
+  console.log(`   GET  /api/verify-owner/:walletAddress/:tokenId`);
+  console.log(`   POST /api/verify-owner`);
   console.log(`   GET  /health`);
 });
 

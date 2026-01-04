@@ -597,6 +597,93 @@ if (result.success) {
 
 ---
 
+### 6. Verify Owner
+
+Verifies if a wallet address owns a specific token ID.
+
+**Endpoint:** `GET /api/verify-owner/:walletAddress/:tokenId`
+
+**Authentication:** Required
+
+**Path Parameters:**
+- `walletAddress` (string, required): The wallet address to verify
+- `tokenId` (number/string, required): The token ID to check
+
+**Query Parameters:**
+- `contractAddress` (string, optional): Override contract address
+- `rpcUrl` (string, optional): Override RPC URL
+- `apiKey` (string, optional): Alternative way to pass API key
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "isOwner": true,
+    "walletAddress": "0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813",
+    "actualOwner": "0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813",
+    "tokenId": "2",
+    "contractAddress": "0x2aAA17DEd5265bF32a7612a76790Cae51D61862B"
+  }
+}
+```
+
+**Error Response (500):**
+```json
+{
+  "error": "Internal Server Error",
+  "message": "Token ID 999 does not exist or has been burned"
+}
+```
+
+**cURL Example:**
+```bash
+curl https://your-service-name.onrender.com/api/verify-owner/0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813/2 \
+  -H "X-API-Key: your-endpoint-key-here"
+```
+
+**JavaScript Example:**
+```javascript
+const walletAddress = "0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813";
+const tokenId = 2;
+const response = await fetch(
+  `https://your-service-name.onrender.com/api/verify-owner/${walletAddress}/${tokenId}`,
+  {
+    headers: {
+      'X-API-Key': 'your-endpoint-key-here'
+    }
+  }
+);
+
+const result = await response.json();
+if (result.success) {
+  if (result.data.isOwner) {
+    console.log(`✅ Wallet owns token ${tokenId}`);
+  } else {
+    console.log(`❌ Wallet does not own token ${tokenId}`);
+    console.log(`Actual owner: ${result.data.actualOwner}`);
+  }
+}
+```
+
+**Alternative POST Method:**
+
+**Endpoint:** `POST /api/verify-owner`
+
+**Request Body:**
+```json
+{
+  "walletAddress": "0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813",
+  "tokenId": 2,
+  "config": {
+    "contractAddress": "0x...",  // Optional
+    "rpcUrl": "https://..."       // Optional
+  }
+}
+```
+
+---
+
 ## Quick Reference
 
 ### Mint an Item
@@ -630,6 +717,19 @@ Or POST method:
 POST /api/item
 Headers: X-API-Key: your-key
 Body: { tokenId, config? }
+```
+
+### Verify Owner
+```bash
+GET /api/verify-owner/:walletAddress/:tokenId
+Headers: X-API-Key: your-key
+```
+
+Or POST method:
+```bash
+POST /api/verify-owner
+Headers: X-API-Key: your-key
+Body: { walletAddress, tokenId, config? }
 ```
 
 ### Health Check
