@@ -6,7 +6,7 @@ Documentation for the Blockchain NFT Minting API endpoints.
 
 This API provides HTTP endpoints for interacting with game item NFTs on the Polygon blockchain. The API runs on a server (deployed on Render) and requires authentication via API key.
 
-**Base URL:** `https://your-service-name.onrender.com`
+**Base URL:** `https://nft-minting-api-peq2.onrender.com/`
 
 > **Note:** All response examples shown in this documentation are examples and may differ from actual API responses.
 
@@ -24,7 +24,7 @@ Include the API key in one of these ways:
 
 ### Example with Header:
 ```bash
-curl -H "X-API-Key: your-endpoint-key" https://your-service.onrender.com/api/mint
+curl -H "X-API-Key: your-endpoint-key" https://nft-minting-api-peq2.onrender.com//api/mint
 ```
 
 ---
@@ -54,7 +54,7 @@ GET /health
 
 **cURL Example:**
 ```bash
-curl https://your-service-name.onrender.com/health
+curl https://nft-minting-api-peq2.onrender.com//health
 ```
 
 ---
@@ -195,7 +195,7 @@ Either `image` (file) OR `imageUrl` (string): Image file upload or URL to the it
 
 **With Image URL (JSON):**
 ```bash
-curl -X POST https://your-service-name.onrender.com/api/mint \
+curl -X POST https://nft-minting-api-peq2.onrender.com/api/mint \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-endpoint-key-here" \
   -d '{
@@ -213,7 +213,7 @@ curl -X POST https://your-service-name.onrender.com/api/mint \
 
 **With Image File Upload (Form Data):**
 ```bash
-curl -X POST https://your-service-name.onrender.com/api/mint \
+curl -X POST https://nft-minting-api-peq2.onrender.com/api/mint \
   -H "X-API-Key: your-endpoint-key-here" \
   -F "destinationAddress=0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813" \
   -F "image=@/path/to/sword-512x512.png" \
@@ -224,7 +224,7 @@ curl -X POST https://your-service-name.onrender.com/api/mint \
 
 **With Image URL (JSON):**
 ```javascript
-const response = await fetch('https://your-service-name.onrender.com/api/mint', {
+const response = await fetch('https://nft-minting-api-peq2.onrender.com/api/mint', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ formData.append('traits', JSON.stringify({
   rarity: 'legendary'
 }));
 
-const response = await fetch('https://your-service-name.onrender.com/api/mint', {
+const response = await fetch('https://nft-minting-api-peq2.onrender.com/api/mint', {
   method: 'POST',
   headers: {
     'X-API-Key': 'your-endpoint-key-here'
@@ -368,7 +368,7 @@ Gets all NFT game items owned by a wallet address.
 
 **cURL Example:**
 ```bash
-curl https://your-service-name.onrender.com/api/retrieve/0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813 \
+curl https://nft-minting-api-peq2.onrender.com/api/retrieve/0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813 \
   -H "X-API-Key: your-endpoint-key-here"
 ```
 
@@ -376,7 +376,7 @@ curl https://your-service-name.onrender.com/api/retrieve/0x0ad71CEf14201B7fC7de5
 ```javascript
 const walletAddress = '0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813';
 const response = await fetch(
-  `https://your-service-name.onrender.com/api/retrieve/${walletAddress}`,
+  `https://nft-minting-api-peq2.onrender.com/api/retrieve/${walletAddress}`,
   {
     headers: {
       'X-API-Key': 'your-endpoint-key-here'
@@ -428,7 +428,7 @@ Same format as GET endpoint above.
 
 **cURL Example:**
 ```bash
-curl -X POST https://your-service-name.onrender.com/api/retrieve \
+curl -X POST https://nft-minting-api-peq2.onrender.com/api/retrieve \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-endpoint-key-here" \
   -d '{
@@ -438,7 +438,7 @@ curl -X POST https://your-service-name.onrender.com/api/retrieve \
 
 **JavaScript Example:**
 ```javascript
-const response = await fetch('https://your-service-name.onrender.com/api/retrieve', {
+const response = await fetch('https://nft-minting-api-peq2.onrender.com/api/retrieve', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -596,7 +596,7 @@ Gets a specific NFT game item by its token ID.
 
 **cURL Example:**
 ```bash
-curl https://your-service-name.onrender.com/api/item/1 \
+curl https://nft-minting-api-peq2.onrender.com/api/item/1 \
   -H "X-API-Key: your-endpoint-key-here"
 ```
 
@@ -604,7 +604,7 @@ curl https://your-service-name.onrender.com/api/item/1 \
 ```javascript
 const tokenId = 1;
 const response = await fetch(
-  `https://your-service-name.onrender.com/api/item/${tokenId}`,
+  `https://nft-minting-api-peq2.onrender.com/api/item/${tokenId}`,
   {
     headers: {
       'X-API-Key': 'your-endpoint-key-here'
@@ -683,7 +683,7 @@ Verifies if a wallet address owns a specific token ID.
 
 **cURL Example:**
 ```bash
-curl https://your-service-name.onrender.com/api/verify-owner/0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813/2 \
+curl https://nft-minting-api-peq2.onrender.com/api/verify-owner/0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813/2 \
   -H "X-API-Key: your-endpoint-key-here"
 ```
 
@@ -692,7 +692,7 @@ curl https://your-service-name.onrender.com/api/verify-owner/0x0ad71CEf14201B7fC
 const walletAddress = "0x0ad71CEf14201B7fC7de53Ff2b4d40B9a96C2813";
 const tokenId = 2;
 const response = await fetch(
-  `https://your-service-name.onrender.com/api/verify-owner/${walletAddress}/${tokenId}`,
+  `https://nft-minting-api-peq2.onrender.com/api/verify-owner/${walletAddress}/${tokenId}`,
   {
     headers: {
       'X-API-Key': 'your-endpoint-key-here'
