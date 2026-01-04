@@ -28,6 +28,4 @@ Thumbs.db
 !contract.txt
 
 # Storage logs (keep folder structure but ignore log data)
-storage/*.csv
-!storage/.gitkeep
-
+storage/
