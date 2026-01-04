@@ -8,14 +8,19 @@ This API provides HTTP endpoints for interacting with game item NFTs on the Poly
 
 **Base URL:** `https://your-service-name.onrender.com`
 
+> **Note:** All response examples shown in this documentation are examples and may differ from actual API responses.
+
 ## Authentication
 
 All API endpoints (except `/health`) require authentication using an API key from `endpoint_key.txt`.
 
 Include the API key in one of these ways:
-- **Header (Recommended):** `X-API-Key: your-endpoint-key`
-- **Query Parameter:** `?apiKey=your-endpoint-key`
-- **Request Body:** `{ "apiKey": "your-endpoint-key", ... }`
+
+**Header (Recommended):** `X-API-Key: your-endpoint-key`
+
+**Query Parameter:** `?apiKey=your-endpoint-key`
+
+**Request Body:** `{ "apiKey": "your-endpoint-key", ... }`
 
 ### Example with Header:
 ```bash
@@ -104,22 +109,34 @@ You can send requests in two ways:
 **Option 2: Form Data Request (Image File Upload)**
 
 **Form Fields:**
-- `destinationAddress` (string, required): Wallet address to receive the NFT
-- `image` (file, required): Image file (512x512 pixels, max 5MB)
-- `traits` (string/JSON, required): JSON string of traits object
-- `imageUrl` (string, optional): Ignored if image file is provided
-- `config` (string/JSON, optional): JSON string of config object
+
+`destinationAddress` (string, required): Wallet address to receive the NFT
+
+`image` (file, required): Image file (512x512 pixels, max 5MB)
+
+`traits` (string/JSON, required): JSON string of traits object
+
+`imageUrl` (string, optional): Ignored if image file is provided
+
+`config` (string/JSON, optional): JSON string of config object
 
 **Required Fields:**
-- `destinationAddress` (string): Wallet address to receive the NFT (must be valid Ethereum address)
-- Either `image` (file) OR `imageUrl` (string): Image file upload or URL to the item image (must be exactly 512x512 pixels)
-- `traits` (object/string): JSON object containing item traits and metadata
+
+`destinationAddress` (string): Wallet address to receive the NFT (must be valid Ethereum address)
+
+Either `image` (file) OR `imageUrl` (string): Image file upload or URL to the item image (must be exactly 512x512 pixels)
+
+`traits` (object/string): JSON object containing item traits and metadata
 
 **Optional Fields:**
-- `config` (object): Override configuration
-  - `contractAddress`: Contract address (defaults to `deployment.json`)
-  - `privateKey`: Private key (defaults to `polygon_private_key.txt`)
-  - `rpcUrl`: RPC endpoint (defaults to `https://polygon-rpc.com/`)
+
+`config` (object): Override configuration
+
+`contractAddress`: Contract address (defaults to `deployment.json`)
+
+`privateKey`: Private key (defaults to `polygon_private_key.txt`)
+
+`rpcUrl`: RPC endpoint (defaults to `https://polygon-rpc.com/`)
 
 **Success Response (200):**
 ```json
@@ -262,15 +279,22 @@ if (result.success) {
 ```
 
 **Image Requirements:**
-- **Size:** Must be exactly **512x512 pixels**
-- **Formats:** JPG, JPEG, PNG, GIF, WebP, SVG
-- **File Size:** Maximum 5MB for file uploads
-- **Image Source:** Either provide `imageUrl` (string) OR upload `image` (file)
-  - If both are provided, the uploaded file takes precedence
-  - Uploaded images are converted to base64 data URIs and stored in metadata
+
+**Size:** Must be exactly **512x512 pixels**
+
+**Formats:** JPG, JPEG, PNG, GIF, WebP, SVG
+
+**File Size:** Maximum 5MB for file uploads
+
+**Image Source:** Either provide `imageUrl` (string) OR upload `image` (file)
+
+If both are provided, the uploaded file takes precedence
+
+Uploaded images are converted to base64 data URIs and stored in metadata
 
 **Other Requirements:**
-- **Gas:** Server wallet must have MATIC for transaction fees
+
+**Gas:** Server wallet must have MATIC for transaction fees
 
 ---
 
@@ -283,12 +307,16 @@ Gets all NFT game items owned by a wallet address.
 **Authentication:** Required
 
 **Path Parameters:**
-- `walletAddress` (string, required): Wallet address to query (must be valid Ethereum address)
+
+`walletAddress` (string, required): Wallet address to query (must be valid Ethereum address)
 
 **Query Parameters:**
-- `contractAddress` (string, optional): Override contract address
-- `rpcUrl` (string, optional): Override RPC URL
-- `apiKey` (string, optional): Alternative way to pass API key (instead of header)
+
+`contractAddress` (string, optional): Override contract address
+
+`rpcUrl` (string, optional): Override RPC URL
+
+`apiKey` (string, optional): Alternative way to pass API key (instead of header)
 
 **Success Response (200):**
 ```json
@@ -388,10 +416,12 @@ Alternative POST method for retrieving items. Useful when you need to pass addit
 ```
 
 **Required Fields:**
-- `walletAddress` (string): Wallet address to query
+
+`walletAddress` (string): Wallet address to query
 
 **Optional Fields:**
-- `config` (object): Configuration overrides
+
+`config` (object): Configuration overrides
 
 **Success Response (200):**
 Same format as GET endpoint above.
@@ -464,10 +494,13 @@ All error responses follow this format:
 
 The API automatically loads configuration from files:
 
-- **Contract Address:** Loaded from `deployment.json` if not provided in request
-- **Private Key:** (Mint only) Loaded from `polygon_private_key.txt` if not provided
-- **RPC URL:** Defaults to `https://polygon-rpc.com/` if not provided
-- **API Key:** Must match the key in `endpoint_key.txt`
+**Contract Address:** Loaded from `deployment.json` if not provided in request
+
+**Private Key:** (Mint only) Loaded from `polygon_private_key.txt` if not provided
+
+**RPC URL:** Defaults to `https://polygon-rpc.com/` if not provided
+
+**API Key:** Must match the key in `endpoint_key.txt`
 
 ---
 
@@ -475,10 +508,13 @@ The API automatically loads configuration from files:
 
 All endpoints operate on the **Polygon Mainnet**.
 
-- **Chain ID:** 137
-- **Default RPC URL:** `https://polygon-rpc.com/`
-- **Currency:** MATIC (for gas fees)
-- **Block Explorer:** [PolygonScan](https://polygonscan.com/)
+**Chain ID:** 137
+
+**Default RPC URL:** `https://polygon-rpc.com/`
+
+**Currency:** MATIC (for gas fees)
+
+**Block Explorer:** [PolygonScan](https://polygonscan.com/)
 
 ---
 
@@ -509,12 +545,16 @@ Gets a specific NFT game item by its token ID.
 **Authentication:** Required
 
 **Path Parameters:**
-- `tokenId` (number/string, required): The token ID to look up
+
+`tokenId` (number/string, required): The token ID to look up
 
 **Query Parameters:**
-- `contractAddress` (string, optional): Override contract address
-- `rpcUrl` (string, optional): Override RPC URL
-- `apiKey` (string, optional): Alternative way to pass API key
+
+`contractAddress` (string, optional): Override contract address
+
+`rpcUrl` (string, optional): Override RPC URL
+
+`apiKey` (string, optional): Alternative way to pass API key
 
 **Success Response (200):**
 ```json
@@ -606,13 +646,18 @@ Verifies if a wallet address owns a specific token ID.
 **Authentication:** Required
 
 **Path Parameters:**
-- `walletAddress` (string, required): The wallet address to verify
-- `tokenId` (number/string, required): The token ID to check
+
+`walletAddress` (string, required): The wallet address to verify
+
+`tokenId` (number/string, required): The token ID to check
 
 **Query Parameters:**
-- `contractAddress` (string, optional): Override contract address
-- `rpcUrl` (string, optional): Override RPC URL
-- `apiKey` (string, optional): Alternative way to pass API key
+
+`contractAddress` (string, optional): Override contract address
+
+`rpcUrl` (string, optional): Override RPC URL
+
+`apiKey` (string, optional): Alternative way to pass API key
 
 **Success Response (200):**
 ```json
